@@ -11,62 +11,35 @@ import {
     Form,
     Button,
 } from "react-bootstrap";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { signinSchema } from "@/validation/SigninSchema";
-import { signin } from "@/services/authService";
-import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
+import { resetPassword } from "@/services/authService";
+import { resetPasswordSchema } from "@/validation/resetPasswordSchema";
 
-export default function SigninForm() {
-
-    const router = useRouter();
-
-    const { login } = useAuth();
+export default function ResetPasswordForm() {
 
     const {
         register,
         handleSubmit,
-        formState: {
-            errors,
-            isSubmitting,
-        },
+        formState: { errors, isSubmitting },
     } = useForm({
-        resolver: yupResolver(signinSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
+        resolver: yupResolver(resetPasswordSchema),
+        mode: "onBlur",
     });
 
     const onSubmit = async (data) => {
+        console.log(data);
+    };
 
-        try {
-
-            const user = await signin(data);
-
-            login(user);
-            
-            toast.success("Login Successfully");
-            router.push("/dashboard");
-
-
-        }
-        catch (error) {
-
-            toast.error(error.message);
-
-        }
-
-    }
     return (
 
         <Container fluid className="min-vh-100 bg-light">
 
             <Row className="min-vh-100">
 
-                {/* Left */}
+                {/* Left Side */}
 
                 <Col
                     lg={6}
@@ -78,25 +51,24 @@ export default function SigninForm() {
                 >
 
                     <Image
-                        src="/images/signin.png"
-                        alt="Authentication"
+                        src="/images/reset-password.png"
+                        alt="Reset Password"
                         width={350}
                         height={350}
                         className="img-fluid mb-4"
                     />
 
                     <h2 className="fw-bold">
-                        Welcome Back
+                        Reset Password
                     </h2>
 
                     <p className="text-center mt-3">
-                        Sign in to continue using
-                        your dashboard securely.
+                        Create a strong new password to secure your account.
                     </p>
 
                 </Col>
 
-                {/* Right */}
+                {/* Right Side */}
 
                 <Col
                     lg={6}
@@ -106,8 +78,8 @@ export default function SigninForm() {
                     <Card
                         className="shadow-lg border-0 rounded-4"
                         style={{
-                            width: "100%",
                             maxWidth: "500px",
+                            width: "100%",
                         }}
                     >
 
@@ -116,117 +88,73 @@ export default function SigninForm() {
                             <div className="text-center mb-4">
 
                                 <h2 className="fw-bold">
-
-                                    Sign In
-
+                                    Reset Password
                                 </h2>
 
                                 <p className="text-muted">
-
-                                    Login to your account
-
+                                    Enter your new password below.
                                 </p>
 
                             </div>
 
                             <Form onSubmit={handleSubmit(onSubmit)}>
 
-                                <Form.Group className="mb-3">
+                                <Form.Group className="mb-4">
 
                                     <Form.Label>
-
-                                        Email Address
-
+                                        New Password
                                     </Form.Label>
 
                                     <Form.Control
-
-                                        type="email"
-
-                                        placeholder="Enter email"
-
-                                        {...register("email")}
-
-                                        isInvalid={!!errors.email}
-
-                                    />
-
-                                    <Form.Control.Feedback type="invalid">
-
-                                        {errors.email?.message}
-
-                                    </Form.Control.Feedback>
-
-                                </Form.Group>
-
-                                <Form.Group className="mb-3">
-
-                                    <Form.Label>
-
-                                        Password
-
-                                    </Form.Label>
-
-                                    <Form.Control
-
                                         type="password"
-
-                                        placeholder="Enter password"
-
-                                        {...register("password")}
-
-                                        isInvalid={!!errors.password}
-
+                                        placeholder="Enter new password"
+                                        {...register("newPassword")}
+                                        isInvalid={!!errors.newPassword}
                                     />
 
                                     <Form.Control.Feedback type="invalid">
-
-                                        {errors.password?.message}
-
+                                        {errors.newPassword?.message}
                                     </Form.Control.Feedback>
 
                                 </Form.Group>
 
-                                <div className="d-flex justify-content-between align-items-center mb-4">
+                                <Form.Group className="mb-4">
 
-                                    <Form.Check
+                                    <Form.Label>
+                                        Confirm Password
+                                    </Form.Label>
 
-                                        type="checkbox"
-
-                                        label="Remember Me"
-
+                                    <Form.Control
+                                        type="password"
+                                        placeholder="Confirm new password"
+                                        {...register("confirmPassword")}
+                                        isInvalid={!!errors.confirmPassword}
                                     />
 
-                                    <Link
-                                        href="/forgot-password"
-                                        className="text-decoration-none"
-                                    >
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.confirmPassword?.message}
+                                    </Form.Control.Feedback>
 
-                                        Forgot Password?
-
-                                    </Link>
-
-                                </div>
+                                </Form.Group>
 
                                 <Button
                                     type="submit"
                                     className="w-100"
+                                    size="lg"
                                     disabled={isSubmitting}
                                 >
-                                    {isSubmitting ? "Signing In..." : "Sign In"}
+                                    {isSubmitting
+                                        ? "Resetting..."
+                                        : "Reset Password"}
                                 </Button>
 
                                 <div className="text-center mt-4">
 
-                                    Don't have an account?{" "}
-
                                     <Link
-                                        href="/signup"
-                                        className="text-decoration-none fw-semibold"
+                                        href="/signin"
+                                        className="text-decoration-none"
                                     >
-
-                                        Create Account
-
+                                        ← Back to Sign In
                                     </Link>
 
                                 </div>
@@ -244,5 +172,4 @@ export default function SigninForm() {
         </Container>
 
     );
-
 }

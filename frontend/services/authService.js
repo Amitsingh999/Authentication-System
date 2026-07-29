@@ -1,85 +1,69 @@
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { auth } from "@/lib/auth";
 import { getData, setData } from "@/utils/Storage";
 
 // Signup
-export const signup = (user) => {
+import {
+    createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword
+} from "firebase/auth";
 
-    const users = getData(STORAGE_KEYS.USERS);
 
-    const exists = users.find(
-        item => item.email === user.email
+
+export const signup = async (data) => {
+
+    const {
+        email,
+        password,
+        fullName,
+        mobile
+    } = data;
+
+
+    const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
     );
 
-    if (exists) {
-        throw new Error("Email already exists");
-    }
 
-    const newUser = {
-        fullName: user.fullName,
+    const user = userCredential.user;
+
+
+    return {
+        uid: user.uid,
         email: user.email,
-        mobile: user.mobile,
-        password: user.password,
+        fullName,
+        mobile
     };
 
-    users.push(newUser);
-
-    setData(STORAGE_KEYS.USERS, users);
-
-    return newUser;
 };
 
 // Signin
-export const signin = (email, password) => {
+export const signin = async (data) => {
 
-    const users = getData(STORAGE_KEYS.USERS);
+    const {
+        email,
+        password
+    } = data;
 
-    const user = users.find(
-        item =>
-            item.email === email &&
-            item.password === password
+    const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
     );
 
-    if (!user) {
-        throw new Error("Invalid Email or Password");
-    }
+    const user = userCredential.user;
 
-    return user;
+    return {
+        uid: user.uid,
+        email: user.email,
+    };
+
 };
 
 
-
-// Check Email (Forgot Password)
-export const checkEmail = (email) => {
-
-    const users = getData(STORAGE_KEYS.USERS);
-
-    const user = users.find(
-        (item) => item.email === email
-    );
-
-    if (!user) {
-        throw new Error("Email not found");
-    }
-
-    return user;
-};
-
-// Update Password
-export const updatePassword = (email, password) => {
-
-    const users = getData(STORAGE_KEYS.USERS);
-
-    const index = users.findIndex(
-        (item) => item.email === email
-    );
-
-    if (index === -1) {
-        throw new Error("User not found");
-    }
-
-    users[index].password = password;
-
-    setData(STORAGE_KEYS.USERS, users);
-
-    return true;
-};
+export async function forgotPassword(email) {
+    return await sendPasswordResetEmail(auth, email);
+}

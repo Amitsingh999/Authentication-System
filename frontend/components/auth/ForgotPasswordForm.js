@@ -15,6 +15,8 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { forgotPasswordSchema } from "@/validation/forgotPasswordSchema";
+import { forgotPassword } from "@/services/authService";
+import { toast } from "react-toastify";
 
 export default function ForgotPasswordForm() {
 
@@ -27,9 +29,34 @@ export default function ForgotPasswordForm() {
         mode: "onBlur",
     });
 
-    const onSubmit = (data) => {
-        console.log(data);
-        // API Call Here
+    const onSubmit = async (data) => {
+
+        try {
+
+            await forgotPassword(data.email);
+
+            toast.success("Password reset link has been sent to your email.");
+
+        } catch (error) {
+
+            console.error(error);
+
+            switch (error.code) {
+
+                case "auth/invalid-email":
+                    toast.error("Please enter a valid email address.");
+                    break;
+
+                case "auth/network-request-failed":
+                    toast.error("Please check your internet connection.");
+                    break;
+
+                default:
+                    toast.error(error.message);
+            }
+
+        }
+
     };
 
     return (

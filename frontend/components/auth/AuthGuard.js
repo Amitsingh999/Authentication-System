@@ -1,28 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AuthGuard({ children }) {
 
     const router = useRouter();
 
-    const [checking, setChecking] = useState(true);
+    const {
+        loading,
+        isAuthenticated,
+    } = useAuth();
 
     useEffect(() => {
-        const isLoggedIn = localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN);
 
-        if (isLoggedIn !== "true") {
+        if (!loading && !isAuthenticated) {
+
             router.replace("/signin");
-            return;
+
         }
 
-        setChecking(false);
-    }, []);
+    }, [loading, isAuthenticated, router]);
 
-    if (checking) {
+    if (loading) {
+
         return null;
+
+
+    }
+
+    if (!isAuthenticated) {
+
+        return null;
+
     }
 
     return children;

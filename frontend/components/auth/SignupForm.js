@@ -37,18 +37,30 @@ export default function SignupForm() {
         },
     });
 
-    const onSubmit = (data) => {
+
+    const onSubmit = async (data) => {
+
         try {
-            signup(data);
+
+            const user = await signup(data);
+
+
+            console.log(user);
+
 
             toast.success("Account Created Successfully");
 
-            reset();
-        } catch (error) {
-            toast.error(error.message);
-        }
-    };
 
+            reset();
+
+
+        } catch (error) {
+
+            toast.error(error.message);
+
+        }
+
+    };
     return (
 
         <Container fluid className="min-vh-100 bg-light">

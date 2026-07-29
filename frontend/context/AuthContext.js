@@ -19,12 +19,19 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
 
-        const isLoggedIn = localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN);
-        const currentUser = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+        const currentUser = localStorage.getItem(
+            STORAGE_KEYS.CURRENT_USER
+        );
 
-        if (isLoggedIn === "true" && currentUser) {
+        const isLoggedIn = localStorage.getItem(
+            STORAGE_KEYS.IS_LOGGED_IN
+        );
+
+        if (currentUser && isLoggedIn === "true") {
+
             setUser(JSON.parse(currentUser));
             setIsAuthenticated(true);
+
         }
 
         setLoading(false);
@@ -60,6 +67,7 @@ export function AuthProvider({ children }) {
     };
 
     return (
+
         <AuthContext.Provider
             value={{
                 user,
@@ -69,8 +77,11 @@ export function AuthProvider({ children }) {
                 isAuthenticated,
             }}
         >
+
             {children}
+
         </AuthContext.Provider>
+
     );
 
 }
