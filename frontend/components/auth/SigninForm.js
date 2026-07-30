@@ -18,13 +18,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { signinSchema } from "@/validation/SigninSchema";
 import { signin } from "@/services/authService";
 import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function SigninForm() {
 
     const router = useRouter();
 
     const { login } = useAuth();
-
+    const [showPassword, setShowPassword] = useState(false);
     const {
         register,
         handleSubmit,
@@ -47,11 +49,9 @@ export default function SigninForm() {
             const user = await signin(data);
 
             login(user);
-            
-            toast.success("Login Successfully");
-            router.push("/dashboard");
 
-
+            toast.success("Login Successful");
+            router.replace("/dashboard");
         }
         catch (error) {
 
@@ -167,23 +167,28 @@ export default function SigninForm() {
 
                                     </Form.Label>
 
-                                    <Form.Control
+                                    <div className="position-relative">
 
-                                        type="password"
+                                        <Form.Control
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Enter password"
+                                            {...register("password")}
+                                            isInvalid={!!errors.password}
+                                        />
 
-                                        placeholder="Enter password"
+                                        <span
+                                            className="position-absolute top-50 end-0 translate-middle-y pe-3"
+                                            style={{ cursor: "pointer", zIndex: 10 }}
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? <FaEye /> : <FaEyeSlash />}
+                                        </span>
 
-                                        {...register("password")}
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.password?.message}
+                                        </Form.Control.Feedback>
 
-                                        isInvalid={!!errors.password}
-
-                                    />
-
-                                    <Form.Control.Feedback type="invalid">
-
-                                        {errors.password?.message}
-
-                                    </Form.Control.Feedback>
+                                    </div>
 
                                 </Form.Group>
 
@@ -192,8 +197,8 @@ export default function SigninForm() {
                                     <Form.Check
 
                                         type="checkbox"
-
                                         label="Remember Me"
+                                        {...register("rememberMe")}
 
                                     />
 

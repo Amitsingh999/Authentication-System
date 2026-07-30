@@ -17,14 +17,20 @@ import { signupSchema } from "@/validation/SignupForm";
 import { signup } from "@/services/authService";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function SignupForm() {
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
         register,
         handleSubmit,
         reset,
-        formState: { errors }
+        formState: { errors, isSubmitting },
     } = useForm({
         resolver: yupResolver(signupSchema),
         defaultValues: {
@@ -37,6 +43,7 @@ export default function SignupForm() {
         },
     });
 
+    const router = useRouter();
 
     const onSubmit = async (data) => {
 
@@ -48,11 +55,14 @@ export default function SignupForm() {
             console.log(user);
 
 
-            toast.success("Account Created Successfully");
+            toast.success("Account Created Successfully. Please verify your email.");
 
 
             reset();
 
+            setTimeout(() => {
+                router.replace("/signin");
+            }, 2000);
 
         } catch (error) {
 
@@ -173,31 +183,57 @@ export default function SignupForm() {
                                 <Form.Group className="mb-3">
                                     <Form.Label>Password</Form.Label>
 
-                                    <Form.Control
-                                        type="password"
-                                        placeholder="Enter password"
-                                        {...register("password")}
-                                        isInvalid={!!errors.password}
-                                    />
+                                    <div className="position-relative">
 
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.password?.message}
-                                    </Form.Control.Feedback>
+                                        <Form.Control
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Enter password"
+                                            {...register("password")}
+                                            isInvalid={!!errors.password}
+                                        />
+
+                                        <span
+                                            className="position-absolute top-50 end-0 translate-middle-y pe-3"
+                                            style={{ cursor: "pointer", zIndex: 10 }}
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? <FaEye /> : <FaEyeSlash />}
+                                        </span>
+
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.password?.message}
+                                        </Form.Control.Feedback>
+
+                                    </div>
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
                                     <Form.Label>Confirm Password</Form.Label>
 
-                                    <Form.Control
-                                        type="password"
-                                        placeholder="Confirm password"
-                                        {...register("confirmPassword")}
-                                        isInvalid={!!errors.confirmPassword}
-                                    />
+                                    <div className="position-relative">
 
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.confirmPassword?.message}
-                                    </Form.Control.Feedback>
+                                        <Form.Control
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            placeholder="Confirm password"
+                                            {...register("confirmPassword")}
+                                            isInvalid={!!errors.confirmPassword}
+                                        />
+
+                                        <span
+                                            className="position-absolute top-50 end-0 translate-middle-y pe-3"
+                                            style={{ cursor: "pointer", zIndex: 10 }}
+                                            onClick={() =>
+                                                setShowConfirmPassword(!showConfirmPassword)
+                                            }
+                                        >
+                                            {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                                        </span>
+
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.confirmPassword?.message}
+                                        </Form.Control.Feedback>
+
+                                    </div>
                                 </Form.Group>
 
                                 <Form.Group className="mb-4">
@@ -214,10 +250,10 @@ export default function SignupForm() {
 
                                 <Button
                                     type="submit"
-                                    variant="primary"
+                                    disabled={isSubmitting}
                                     className="w-100 py-2 rounded-3"
                                 >
-                                    Create Account
+                                    {isSubmitting ? "Creating Account..." : "Create Account"}
                                 </Button>
 
                                 <div className="text-center mt-4">

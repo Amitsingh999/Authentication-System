@@ -10,12 +10,14 @@ export default function Header() {
     const router = useRouter();
     const { user } = useAuth();
     const { logout } = useAuth();
-    const handleLogout = () => {
-
-        logout();
-
-        router.push("/signin");
-
+    
+    const handleLogout = async () => {
+        try {
+            await logout();
+            router.replace("/signin");
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (

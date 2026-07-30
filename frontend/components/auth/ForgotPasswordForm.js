@@ -17,6 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { forgotPasswordSchema } from "@/validation/forgotPasswordSchema";
 import { forgotPassword } from "@/services/authService";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function ForgotPasswordForm() {
 
@@ -29,13 +30,20 @@ export default function ForgotPasswordForm() {
         mode: "onBlur",
     });
 
+    const router = useRouter();
+
     const onSubmit = async (data) => {
 
         try {
 
             await forgotPassword(data.email);
 
-            toast.success("Password reset link has been sent to your email.");
+            toast.success("Check your inbox for the password reset link.");
+            reset();
+
+            setTimeout(() => {
+                router.replace("/signin");
+            }, 2000);
 
         } catch (error) {
 
