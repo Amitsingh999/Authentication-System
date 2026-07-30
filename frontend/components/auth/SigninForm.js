@@ -16,10 +16,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signinSchema } from "@/validation/SigninSchema";
-import { signin } from "@/services/authService";
+import { signin, signInWithGoogle } from "@/services/authService";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 export default function SigninForm() {
 
@@ -60,6 +61,22 @@ export default function SigninForm() {
         }
 
     }
+
+    const handleGoogleSignin = async () => {
+        try {
+            const user = await signInWithGoogle();
+
+            login(user);
+
+            toast.success("Google Sign-In Successful");
+
+            router.replace("/dashboard");
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
+
     return (
 
         <Container fluid className="min-vh-100 bg-light">
@@ -219,6 +236,26 @@ export default function SigninForm() {
                                     disabled={isSubmitting}
                                 >
                                     {isSubmitting ? "Signing In..." : "Sign In"}
+                                </Button>
+
+                                <div className="text-center my-3">
+                                    <span className="text-muted">OR</span>
+                                </div>
+
+                                <Button
+                                    variant="outline-dark"
+                                    className="w-100 d-flex align-items-center justify-content-center gap-2 fw-semibold"
+                                    type="button"
+                                    onClick={handleGoogleSignin}
+                                >
+                                    {/* <Image
+                                        src="/images/google.png"
+                                        alt="Google"
+                                        width={20}
+                                        height={20}
+                                    /> */}
+                                     <FcGoogle size={22} />
+                                    Continue with Google
                                 </Button>
 
                                 <div className="text-center mt-4">

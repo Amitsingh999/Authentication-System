@@ -5,6 +5,8 @@ import {
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
     sendEmailVerification,
+    GoogleAuthProvider,
+    signInWithPopup,
 } from "firebase/auth";
 
 /**
@@ -67,7 +69,7 @@ export const signin = async (data) => {
         email,
         password
     );
-    
+
     const user = userCredential.user;
 
     // Refresh user data to get latest verification status
@@ -99,4 +101,11 @@ export const forgotPassword = async (email) => {
 
     return await sendPasswordResetEmail(auth, email);
 
+};
+
+const googleProvider = new GoogleAuthProvider();
+
+export const signInWithGoogle = async () => {
+    const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
 };
