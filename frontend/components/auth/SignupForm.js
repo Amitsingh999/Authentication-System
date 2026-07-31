@@ -136,7 +136,9 @@ export default function SignupForm() {
                             <Form onSubmit={handleSubmit(onSubmit)}>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Full Name</Form.Label>
+                                    <Form.Label>
+                                        Full Name <span className="text-danger">*</span>
+                                    </Form.Label>
 
                                     <Form.Control
                                         type="text"
@@ -151,7 +153,7 @@ export default function SignupForm() {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Email Address</Form.Label>
+                                    <Form.Label>Email Address <span className="text-danger">*</span></Form.Label>
 
                                     <Form.Control
                                         type="email"
@@ -166,7 +168,7 @@ export default function SignupForm() {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Mobile Number</Form.Label>
+                                    <Form.Label>Mobile Number <span className="text-danger">*</span></Form.Label>
 
                                     <Form.Control
                                         type="text"
@@ -181,7 +183,7 @@ export default function SignupForm() {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Password</Form.Label>
+                                    <Form.Label>Password <span className="text-danger">*</span></Form.Label>
 
                                     <div className="position-relative">
 
@@ -208,7 +210,7 @@ export default function SignupForm() {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Confirm Password</Form.Label>
+                                    <Form.Label>Confirm Password <span className="text-danger">*</span></Form.Label>
 
                                     <div className="position-relative">
 

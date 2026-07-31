@@ -136,7 +136,7 @@ export default function ForgotPasswordForm() {
                                 <Form.Group className="mb-4">
 
                                     <Form.Label>
-                                        Email Address
+                                        Email Address <span className="text-danger">*</span>
                                     </Form.Label>
 
                                     <Form.Control
