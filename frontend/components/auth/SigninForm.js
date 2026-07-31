@@ -152,7 +152,7 @@ export default function SigninForm() {
 
                                     <Form.Label>
 
-                                        Email Address
+                                        Email Address <span className="text-danger">*</span>
 
                                     </Form.Label>
 
@@ -180,7 +180,7 @@ export default function SigninForm() {
 
                                     <Form.Label>
 
-                                        Password
+                                        Password <span className="text-danger">*</span>
 
                                     </Form.Label>
 
@@ -254,7 +254,7 @@ export default function SigninForm() {
                                         width={20}
                                         height={20}
                                     /> */}
-                                     <FcGoogle size={22} />
+                                    <FcGoogle size={22} />
                                     Continue with Google
                                 </Button>
 
