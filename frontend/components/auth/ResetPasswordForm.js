@@ -102,7 +102,7 @@ export default function ResetPasswordForm() {
                                 <Form.Group className="mb-4">
 
                                     <Form.Label>
-                                        New Password
+                                        New Password <span className="text-danger">*</span>
                                     </Form.Label>
 
                                     <Form.Control
@@ -121,7 +121,7 @@ export default function ResetPasswordForm() {
                                 <Form.Group className="mb-4">
 
                                     <Form.Label>
-                                        Confirm Password
+                                        Confirm Password <span className="text-danger">*</span>
                                     </Form.Label>
 
                                     <Form.Control
